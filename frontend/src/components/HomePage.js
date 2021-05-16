@@ -9,12 +9,10 @@ const HomePage = () => {
             <h1>Welcome to Auto Grading System Homepage</h1>
             <h3>{number}</h3>
             <button onClick={() => setNumber(number + 1)}>Click</button>
-            <Link
-                        to="/editor"
-                        className="border border-5"
-                    > Go to Editor</Link>
-
-            
+            <Link to="/editor" className="border border-5">
+                {" "}
+                Go to Editor
+            </Link>
         </div>
     )
 }
