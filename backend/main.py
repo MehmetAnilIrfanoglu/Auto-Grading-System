@@ -9,6 +9,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from apps.task import user_models
 
 from apps.task.user_routers import router as user_router
+from apps.task.lecture_routers import router as lecture_router
+from apps.task.assignment_routers import router as assignment_router
+from apps.task.student_routers import router as student_router
+from apps.task.grade_routers import router as grade_router
+
 
 app = FastAPI()
 
@@ -60,6 +65,10 @@ async def login_for_access_token(
 
 
 app.include_router(user_router, tags=["users"], prefix="/users")
+app.include_router(lecture_router, tags=["lectures"], prefix="/users")
+app.include_router(assignment_router, tags=["assignments"], prefix="/users")
+app.include_router(student_router, tags=["students"], prefix="/users")
+app.include_router(grade_router, tags=["grades"], prefix="/users")
 
 
 if __name__ == "__main__":

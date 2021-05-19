@@ -33,7 +33,6 @@ async def create_user(request: Request, user: UserModel = Body(...)):
     """Create a user"""
 
     user = jsonable_encoder(user)
-    user["userGroup"] = "default"
 
     if (
         find_user := await request.app.mongodb["users"].find_one(

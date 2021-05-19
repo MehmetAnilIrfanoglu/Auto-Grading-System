@@ -15,28 +15,78 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
+class StudentGradeModel(BaseModel):
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    assignment_name: str = Field(...)
+    assignment_id: str = Field(...)
+    scores: List[int] = Field(...)
+
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "assignment_name": "Assignment 3",
+                "assignment_id": "132156464",
+                "scores": [2, 0],
+            }
+        }
+
+
 class StudentModel(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     name: str = Field(...)
     number: str = Field(...)
+    grades: List[StudentGradeModel] = []
+
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "name": "John",
+                "number": "110510148",
+            }
+        }
+
+
+class AssignmentModel(BaseModel):
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    name: str = Field(...)
+    inputs: List[str] = Field(...)
+    outputs: List[str] = Field(...)
+    scores: List[int] = Field(...)
+
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "name": "Assignment 3",
+                "inputs": ["abs", "sdfsdf"],
+                "outputs": ["asdassf", "sjkdfhgskjdf"],
+                "scores": [2, 3],
+            }
+        }
 
 
 class LectureModel(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     name: str = Field(...)
+    assignments: List[AssignmentModel] = []
     students: List[StudentModel] = []
 
-
-class AssignmentModel(BaseModel):
-    id: str = Field(default_factory=uuid.uuid4, alias="_id")
-    title: str = Field(...)
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "name": "COMP202",
+            }
+        }
 
 
 class UserModel(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     email: EmailStr = Field(...)
     password: str = Field(...)
-    assignments: List[AssignmentModel] = []
+    lectures: List[LectureModel] = []
 
     class Config:
         allow_population_by_field_name = True
@@ -51,7 +101,6 @@ class UserModel(BaseModel):
 class UserAPIModel(BaseModel):
     id: Optional[str] = Field(alias="_id")
     email: Optional[EmailStr]
-    userGroup: Optional[str]
 
     class Config:
         allow_population_by_field_name = True
