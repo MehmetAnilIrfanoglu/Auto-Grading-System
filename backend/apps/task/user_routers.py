@@ -56,7 +56,7 @@ async def create_user(request: Request, user: UserModel = Body(...)):
     "",
     response_description="Get current user",
     operation_id="getCurrentUser",
-    response_model=UserAPIModel,
+    response_model=UserModel,
     responses={401: {"model": Message}},
 )
 async def get_current(auth_user: UserModel = Depends(user_models.get_current_user)):
@@ -67,7 +67,7 @@ async def get_current(auth_user: UserModel = Depends(user_models.get_current_use
     "/{uid}",
     response_description="Get a single user",
     operation_id="getSingleUser",
-    response_model=UserAPIModel,
+    response_model=UserModel,
     responses={403: {"model": Message}, 401: {"model": Message}},
 )
 async def show_user(

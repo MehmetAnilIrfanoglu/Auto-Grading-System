@@ -51,6 +51,7 @@ class StudentModel(BaseModel):
 class AssignmentModel(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     name: str = Field(...)
+    text: str = Field(...)
     inputs: List[str] = Field(...)
     outputs: List[str] = Field(...)
     scores: List[int] = Field(...)
@@ -60,6 +61,7 @@ class AssignmentModel(BaseModel):
         schema_extra = {
             "example": {
                 "name": "Assignment 3",
+                "text": "Write a function that takes 2 numbers and gives their sum",
                 "inputs": ["abs", "sdfsdf"],
                 "outputs": ["asdassf", "sjkdfhgskjdf"],
                 "scores": [2, 3],
@@ -85,6 +87,9 @@ class LectureModel(BaseModel):
 class UserModel(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     email: EmailStr = Field(...)
+    name: str = Field(...)
+    number: str = Field(...)
+    user_group: str = Field(...)
     password: str = Field(...)
     lectures: List[LectureModel] = []
 
@@ -93,6 +98,9 @@ class UserModel(BaseModel):
         schema_extra = {
             "example": {
                 "email": "hello@agu.edu.tr",
+                "name": "Jack",
+                "user_group": "student",
+                "number": "null",
                 "password": "hello1234",
             }
         }
@@ -101,6 +109,7 @@ class UserModel(BaseModel):
 class UserAPIModel(BaseModel):
     id: Optional[str] = Field(alias="_id")
     email: Optional[EmailStr]
+    user_group: Optional[str]
 
     class Config:
         allow_population_by_field_name = True
@@ -108,7 +117,7 @@ class UserAPIModel(BaseModel):
             "example": {
                 "_id": "c765c307-560c-47ab-b29e-0a1265eab860",
                 "email": "hello@agu.edu.tr",
-                "userGroup": "default",
+                "userGroup": "student",
             }
         }
 

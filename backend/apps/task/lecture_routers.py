@@ -36,7 +36,7 @@ async def create_lecture(
 
     lecture = jsonable_encoder(lecture)
 
-    if auth_user["_id"] == uid:
+    if auth_user["_id"] == uid and auth_user["user_group"] == "instructor":
         update_result = await request.app.mongodb["users"].update_one(
             {"_id": uid}, {"$push": {"lectures": lecture}}
         )
@@ -60,7 +60,7 @@ async def create_lecture(
 @router.get(
     "/{uid}/lectures",
     response_description="List all lectures",
-    operation_id="listLecturesOfUser",
+    operation_id="listLectures",
     response_model=List[LectureModel],
     responses={
         404: {"model": Message},
@@ -70,12 +70,18 @@ async def create_lecture(
 )
 async def list_lectures(
     uid: str,
+    request: Request,
     auth_user: UserModel = Depends(user_models.get_current_user),
 ):
-    """list all lectures of a user with given userID"""
-
+    """list all lectures"""
     if auth_user["_id"] == uid:
-        return auth_user["lectures"]
+        lectures = []
+        for doc in await request.app.mongodb["users"].find().to_list(length=100):
+            if doc["user_group"] == "instructor":
+                for lecture in doc["lectures"]:
+                    lectures.append(lecture)
+
+        return lectures
 
     return JSONResponse(
         status_code=status.HTTP_403_FORBIDDEN, content={"message": "No right to access"}
@@ -96,19 +102,32 @@ async def list_lectures(
 async def show_lecture(
     uid: str,
     lid: str,
+    request: Request,
     auth_user: UserModel = Depends(user_models.get_current_user),
 ):
     """Get a single lecture with given userID and lectureID"""
 
     if auth_user["_id"] == uid:
-        for lecture in auth_user["lectures"]:
-            if lecture["_id"] == lid:
-                return lecture
+        if auth_user["user_group"] == "instructor":
+            for lecture in auth_user["lectures"]:
+                if lecture["_id"] == lid:
+                    return lecture
 
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"message": "Lecture not found"},
-        )
+            return JSONResponse(
+                status_code=status.HTTP_404_NOT_FOUND,
+                content={"message": "Lecture not found"},
+            )
+        else:
+            if (
+                user := await request.app.mongodb["users"].find_one(
+                    {"lectures._id": lid}
+                )
+            ) is not None:
+                for lecture in user["lectures"]:
+                    if lecture["_id"] == lid:
+                        for student in lecture["students"]:
+                            if student["number"] == auth_user["number"]:
+                                return lecture
 
     return JSONResponse(
         status_code=status.HTTP_403_FORBIDDEN, content={"message": "No right to access"}
@@ -138,7 +157,7 @@ async def update_lecture(
     lecture = {k: v for k, v in lecture.dict().items() if v is not None}
     lecture = jsonable_encoder(lecture)
 
-    if auth_user["_id"] == uid:
+    if auth_user["_id"] == uid and auth_user["user_group"] == "instructor":
         if len(lecture) >= 1:
             update_result = await request.app.mongodb["users"].update_one(
                 {"_id": uid, "lectures._id": lid},
@@ -190,7 +209,7 @@ async def delete_lecture(
 ):
     """Delete a lecture with given userID and lectureID"""
 
-    if auth_user["_id"] == uid:
+    if auth_user["_id"] == uid and auth_user["user_group"] == "instructor":
         update_result = await request.app.mongodb["users"].update_one(
             {"_id": uid}, {"$pull": {"lectures": {"_id": lid}}}
         )

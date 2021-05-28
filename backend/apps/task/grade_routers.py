@@ -110,8 +110,8 @@ async def list_grades(
 
 @router.get(
     "/{uid}/lectures/{lid}/students/{sid}/grades/{aid}",
-    response_description="Get a single student of a lecture",
-    operation_id="getSingleStudent",
+    response_description="Get a single grade of a student",
+    operation_id="getSingleGrade",
     response_model=StudentGradeModel,
     responses={
         404: {"model": Message},
@@ -159,8 +159,8 @@ async def show_grade(
 
 @router.put(
     "/{uid}/lectures/{lid}/students/{sid}/grades/{gid}",
-    response_description="Update a student",
-    operation_id="updateStudent",
+    response_description="Update a grade",
+    operation_id="updateGrade",
     response_model=Message,
     responses={
         404: {"model": Message},

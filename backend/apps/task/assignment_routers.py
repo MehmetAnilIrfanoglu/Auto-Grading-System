@@ -99,8 +99,8 @@ async def list_assignments(
 
 @router.get(
     "/{uid}/lectures/{lid}/lessons/{aid}",
-    response_description="Get a single lesson of a semester",
-    operation_id="getSingleLesson",
+    response_description="Get a single assignment of a lecture",
+    operation_id="getSingleAssignment",
     response_model=AssignmentModel,
     responses={
         404: {"model": Message},
