@@ -1,26 +1,31 @@
-import "./App.css"
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
-import Navbar from "./components/Navbar"
-import Home from "./components/HomePage"
-import NotFound from "./components/NotFound"
-import CodeEditor from "./components/CodeEditor"
+import React from "react"
+import { BrowserRouter as Router, Route } from "react-router-dom"
 
-function App() {
-    return (
-        <Router>
-            <div className="App">
-                <Navbar />
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    {/* <Route exact path="/signin" component={Login} /> */}
-                    {/* <Route exact path="/signup" component={Register} /> */}
-                   
-                    <Route exact path="/editor" component={CodeEditor} />
-                    <Route component={NotFound} />
-                </Switch>
-            </div>
-        </Router>
-    )
-}
+import routes from "./routes"
+import withTracker from "./withTracker"
 
-export default App
+import "bootstrap/dist/css/bootstrap.min.css"
+import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css"
+
+export default () => (
+    <Router basename={process.env.REACT_APP_BASENAME || ""}>
+        <div>
+            {routes.map((route, index) => {
+                return (
+                    <Route
+                        key={index}
+                        path={route.path}
+                        exact={route.exact}
+                        component={withTracker((props) => {
+                            return (
+                                <route.layout {...props}>
+                                    <route.component {...props} />
+                                </route.layout>
+                            )
+                        })}
+                    />
+                )
+            })}
+        </div>
+    </Router>
+)
