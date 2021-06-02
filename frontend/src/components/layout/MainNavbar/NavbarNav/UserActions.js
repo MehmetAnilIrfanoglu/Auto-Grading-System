@@ -46,7 +46,7 @@ export default class UserActions extends React.Component {
                         alt="User Avatar"
                     />{" "}
                     <span className="d-none d-md-inline-block">
-                        Sierra Brooks
+                        Name Surname
                     </span>
                 </DropdownToggle>
                 <Collapse

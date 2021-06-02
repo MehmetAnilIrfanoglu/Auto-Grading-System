@@ -3,31 +3,43 @@ import { Redirect } from "react-router-dom"
 
 // Layout Types
 import { DefaultLayout } from "./layouts"
-
+import { LoginLayout } from "./layouts"
 // Route Views
 import Dashboard from "./views/Dashboard"
 import Assignments from "./views/Assignments"
 import Courses from "./views/Courses"
+import LoginPage from "./views/LoginPage"
+import RegisterPage from "./views/RegisterPage"
 
 export default [
     {
         path: "/",
         exact: true,
-        layout: DefaultLayout,
-        component: () => <Redirect to="/blog-overview" />,
+        layout: LoginLayout,
+        component: () => <Redirect to="/login" />,
     },
     {
-        path: "/blog-overview",
+        path: "/login",
+        layout: LoginLayout,
+        component: LoginPage,
+    },
+    {
+        path: "/register",
+        layout: LoginLayout,
+        component: RegisterPage,
+    },
+    {
+        path: "/dashboard",
         layout: DefaultLayout,
         component: Dashboard,
     },
     {
-        path: "/errors",
+        path: "/assignments",
         layout: DefaultLayout,
         component: Assignments,
     },
     {
-        path: "/tables",
+        path: "/courses",
         layout: DefaultLayout,
         component: Courses,
     },

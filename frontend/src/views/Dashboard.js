@@ -1,6 +1,6 @@
 import React from "react"
 
-const Dashboard = ({ smallStats }) => {
+const Dashboard = () => {
     return (
         <div>
             <h3>Welcome to dashboard</h3>

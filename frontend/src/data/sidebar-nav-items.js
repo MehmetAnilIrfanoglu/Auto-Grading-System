@@ -2,19 +2,19 @@ export default function () {
     return [
         {
             title: "Dashboard",
-            to: "/blog-overview",
+            to: "/dashboard",
             htmlBefore: '<i class="material-icons">edit</i>',
             htmlAfter: "",
         },
         {
             title: "Courses",
             htmlBefore: '<i class="material-icons">table_chart</i>',
-            to: "/tables",
+            to: "/courses",
         },
         {
             title: "Assignments",
             htmlBefore: '<i class="material-icons">error</i>',
-            to: "/errors",
+            to: "/assignments",
         },
     ]
 }

@@ -6,7 +6,7 @@ import { Container, Navbar } from "shards-react"
 import NavbarNav from "./NavbarNav/NavbarNav"
 import NavbarToggle from "./NavbarToggle"
 
-const MainNavbar = ({ layout, stickyTop }) => {
+const MainNavbar = ({ stickyTop }) => {
     const classes = classNames(
         "main-navbar",
         "bg-white",

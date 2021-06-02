@@ -1,3 +1,3 @@
-import DefaultLayout from "./Default";
-
-export { DefaultLayout };
+import DefaultLayout from "./Default"
+import LoginLayout from "./Login"
+export { DefaultLayout, LoginLayout }
