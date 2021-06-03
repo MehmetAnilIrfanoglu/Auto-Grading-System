@@ -87,10 +87,10 @@ class LectureModel(BaseModel):
 class UserModel(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     email: EmailStr = Field(...)
+    password: str = Field(...)
     name: str = Field(...)
     number: str = Field(...)
     user_group: str = Field(...)
-    password: str = Field(...)
     lectures: List[LectureModel] = []
 
     class Config:
@@ -102,22 +102,6 @@ class UserModel(BaseModel):
                 "user_group": "student",
                 "number": "null",
                 "password": "hello1234",
-            }
-        }
-
-
-class UserAPIModel(BaseModel):
-    id: Optional[str] = Field(alias="_id")
-    email: Optional[EmailStr]
-    user_group: Optional[str]
-
-    class Config:
-        allow_population_by_field_name = True
-        schema_extra = {
-            "example": {
-                "_id": "c765c307-560c-47ab-b29e-0a1265eab860",
-                "email": "hello@agu.edu.tr",
-                "userGroup": "student",
             }
         }
 

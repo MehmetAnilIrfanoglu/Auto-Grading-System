@@ -14,7 +14,6 @@ from passlib.hash import bcrypt
 from apps.task import user_models
 from .user_models import (
     UserModel,
-    UserAPIModel,
     UpdatePasswordModel,
     Message,
 )
@@ -26,7 +25,7 @@ router = APIRouter()
     "",
     response_description="Add new user",
     operation_id="createUser",
-    response_model=UserAPIModel,
+    response_model=UserModel,
     responses={409: {"model": Message}},
 )
 async def create_user(request: Request, user: UserModel = Body(...)):
@@ -147,7 +146,7 @@ async def update_password(
     "/{uid}",
     response_description="Delete user",
     operation_id="deleteUser",
-    response_model=UserAPIModel,
+    response_model=Message,
     responses={
         401: {"model": Message},
         403: {"model": Message},
