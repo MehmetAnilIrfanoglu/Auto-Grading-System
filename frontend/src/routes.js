@@ -10,8 +10,9 @@ import Assignments from "./views/Assignments"
 import Courses from "./views/Courses"
 import LoginPage from "./views/LoginPage"
 import RegisterPage from "./views/RegisterPage"
+import Logout from "./views/Logout"
 
-export default [
+const Routes = [
     {
         path: "/",
         exact: true,
@@ -22,6 +23,11 @@ export default [
         path: "/login",
         layout: LoginLayout,
         component: LoginPage,
+    },
+    {
+        path: "/logout",
+        layout: LoginLayout,
+        component: Logout,
     },
     {
         path: "/register",
@@ -44,3 +50,5 @@ export default [
         component: Courses,
     },
 ]
+
+export default Routes

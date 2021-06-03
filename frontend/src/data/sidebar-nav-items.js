@@ -16,5 +16,10 @@ export default function () {
             htmlBefore: '<i class="material-icons">error</i>',
             to: "/assignments",
         },
+        {
+            title: "Logout",
+            htmlBefore: '<i class="material-icons">logout</i>',
+            to: "/logout",
+        },
     ]
 }

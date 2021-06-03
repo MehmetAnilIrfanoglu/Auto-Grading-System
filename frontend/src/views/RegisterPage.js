@@ -1,21 +1,39 @@
-import React from "react"
+import React, { useState } from "react"
 
-const RegisterPage = () => {
+var AutoGradingApi = require("auto_grading_api")
+
+const RegisterPage = ({ history }) => {
+    const [formEmail, setEmail] = useState("")
+    const [formPassword, setPassword] = useState("")
+    const [formName, setName] = useState("")
+    const [formNumber, setNumber] = useState("")
+    const [formUserGroup, setUserGroup] = useState("instructor")
+
+    const registerUser = (e) => {
+        e.preventDefault()
+
+        let apiInstance = new AutoGradingApi.UsersApi()
+        let userModel = new AutoGradingApi.UserModel(
+            formEmail,
+            formName,
+            formNumber,
+            formUserGroup,
+            formPassword
+        )
+        apiInstance.createUser(userModel, (error, data, response) => {
+            if (error) {
+                console.error(error)
+            } else {
+                console.log("API called successfully. Returned data: " + data)
+                history.push({
+                    pathname: "/login",
+                })
+            }
+        })
+    }
+
     return (
         <div>
-            <meta charSet="UTF-8" />
-            <title>Register</title>
-            <meta name="description" content="Login-Register Pages" />
-            <meta name="author" content="Ahmed Tariq" />
-            <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1.0"
-            />
-            <link rel="stylesheet" href="main.css" />
-            <link
-                href="https://fonts.googleapis.com/icon?family=Material+Icons"
-                rel="stylesheet"
-            />
             <style
                 dangerouslySetInnerHTML={{
                     __html: "\n        body {\n            background-color: #303641;\n        }\n    ",
@@ -25,7 +43,7 @@ const RegisterPage = () => {
                 <div id="title">
                     <i className="material-icons lock">lock</i> Register
                 </div>
-                <form action="/login">
+                <form onSubmit={registerUser.bind(this)}>
                     <div className="input">
                         <div className="input-addon">
                             <i className="fa fa-user" />
@@ -35,6 +53,7 @@ const RegisterPage = () => {
                             placeholder="Full Name"
                             type="text"
                             required
+                            onChange={(e) => setName(e.target.value)}
                             className="validate"
                             autoComplete="off"
                         />
@@ -49,6 +68,7 @@ const RegisterPage = () => {
                             placeholder="Email"
                             type="email"
                             required
+                            onChange={(e) => setEmail(e.target.value)}
                             className="validate"
                             autoComplete="off"
                         />
@@ -63,6 +83,7 @@ const RegisterPage = () => {
                             placeholder="School ID"
                             type="number"
                             required
+                            onChange={(e) => setNumber(e.target.value)}
                             className="validate"
                             autoComplete="off"
                         />
@@ -77,6 +98,7 @@ const RegisterPage = () => {
                             placeholder="Password"
                             type="password"
                             required
+                            onChange={(e) => setPassword(e.target.value)}
                             className="validate"
                             autoComplete="off"
                         />
@@ -86,11 +108,20 @@ const RegisterPage = () => {
                         <span>I am:</span>
                         <br />
                         <label className="radio">
-                            <input name="radio" type="radio" defaultChecked />
+                            <input
+                                name="radio"
+                                type="radio"
+                                defaultChecked
+                                onChange={() => setUserGroup("instructor")}
+                            />
                             <span>An instructor</span>
                         </label>
                         <label className="radio">
-                            <input name="radio" type="radio" />
+                            <input
+                                name="radio"
+                                type="radio"
+                                onChange={() => setUserGroup("student")}
+                            />
                             <span>A student</span>
                         </label>
                     </div>
@@ -100,12 +131,10 @@ const RegisterPage = () => {
                             I accept Terms of Service
                         </span>
                     </div>
-                    <a href="/login">
-                        <input type="submit" value="Register" />
-                    </a>
+                    <input type="submit" value="Register" />
                 </form>
                 <div className="privacy">
-                    <a href="#">Privacy Policy</a>
+                    <a href="/">Privacy Policy</a>
                 </div>
                 <div className="register">
                     Do you already have an account?

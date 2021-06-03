@@ -1,6 +1,7 @@
 import AceEditor from "react-ace"
 import axios from "axios"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
+import { UserContext } from "../Context"
 
 import "ace-builds/src-noconflict/mode-python"
 import "ace-builds/src-noconflict/mode-c_cpp"
@@ -12,13 +13,22 @@ import "ace-builds/src-noconflict/theme-chrome"
 
 import "ace-builds/src-noconflict/ext-language_tools"
 
-const CodeEditor = () => {
+const CodeEditor = ({ history }) => {
     const [code, setCode] = useState("")
     const [input, setInput] = useState("")
     const [languageID, setLanguageID] = useState(53)
     const [langMode, setLangMode] = useState("c_cpp")
     const [theme, setTheme] = useState("chrome")
     const outputText = document.getElementById("output")
+
+    const [login, setLogin] = useContext(UserContext)
+
+    useEffect(() => {
+        if (login) {
+        } else {
+            history.push("/")
+        }
+    }, [login])
 
     useEffect(() => {
         if ("monokai" === theme) {

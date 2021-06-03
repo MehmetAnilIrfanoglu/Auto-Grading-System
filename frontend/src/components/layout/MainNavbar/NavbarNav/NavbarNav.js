@@ -1,10 +1,17 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Nav } from "shards-react"
+import { UserContext } from "../../../../Context"
 
-import UserActions from "./UserActions"
+const NavbarNav = () => {
+    const [login] = useContext(UserContext)
 
-export default () => (
-    <Nav navbar className="border-left flex-row">
-        <UserActions />
-    </Nav>
-)
+    return (
+        <Nav navbar className="my-auto flex flex-row">
+            <div className="mx-4">{login.userGroup.toUpperCase()}</div>
+            <div className="mx-4">{login.userName}</div>
+            <div className="mx-4">{login.userNumber}</div>
+        </Nav>
+    )
+}
+
+export default NavbarNav

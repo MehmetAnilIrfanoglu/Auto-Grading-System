@@ -6,7 +6,7 @@ import withTracker from "./withTracker"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css"
 
-export default () => (
+const App = () => (
     <Router basename={process.env.REACT_APP_BASENAME || ""}>
         <div>
             {routes.map((route, index) => {
@@ -28,3 +28,5 @@ export default () => (
         </div>
     </Router>
 )
+
+export default App
