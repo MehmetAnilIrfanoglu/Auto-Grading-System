@@ -6,14 +6,10 @@ const NavbarNav = () => {
     const [login] = useContext(UserContext)
 
     return (
-        <Nav navbar>
-            {login && (
-                <div className="my-auto flex flex-row">
-                    <div className="mx-4">{login.userGroup.toUpperCase()}</div>
-                    <div className="mx-4">{login.userName}</div>
-                    <div className="mx-4">{login.userNumber}</div>
-                </div>
-            )}
+        <Nav navbar className="my-auto flex flex-row">
+            <div className="mx-4">{login && login.userGroup.toUpperCase()}</div>
+            <div className="mx-4">{login && login.userName}</div>
+            <div className="mx-4">{login && login.userNumber}</div>
         </Nav>
     )
 }
