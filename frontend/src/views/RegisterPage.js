@@ -15,19 +15,17 @@ const RegisterPage = ({ history }) => {
         let apiInstance = new AutoGradingApi.UsersApi()
         let userModel = new AutoGradingApi.UserModel(
             formEmail,
+            formPassword,
             formName,
             formNumber,
-            formUserGroup,
-            formPassword
+            formUserGroup
         )
         apiInstance.createUser(userModel, (error, data, response) => {
             if (error) {
                 console.error(error)
             } else {
                 console.log("API called successfully. Returned data: " + data)
-                history.push({
-                    pathname: "/login",
-                })
+                history.push({ pathname: "/login" })
             }
         })
     }
