@@ -6,11 +6,13 @@ import { DefaultLayout } from "./layouts"
 import { LoginLayout } from "./layouts"
 // Route Views
 import Dashboard from "./views/Dashboard"
-import Assignments from "./views/Assignments"
+import Editor from "./views/Editor"
 import Courses from "./views/Courses"
 import LoginPage from "./views/LoginPage"
 import RegisterPage from "./views/RegisterPage"
 import Logout from "./views/Logout"
+import CourseDetail from "./views/CourseDetail"
+import AssignmentDetail from "./views/AssignmentDetail"
 
 const Routes = [
     {
@@ -40,14 +42,24 @@ const Routes = [
         component: Dashboard,
     },
     {
-        path: "/assignments",
+        path: "/editor",
         layout: DefaultLayout,
-        component: Assignments,
+        component: Editor,
+    },
+    {
+        path: "/assignments/:lid/:aid",
+        layout: DefaultLayout,
+        component: AssignmentDetail,
     },
     {
         path: "/courses",
         layout: DefaultLayout,
         component: Courses,
+    },
+    {
+        path: "/lectures/:id",
+        layout: DefaultLayout,
+        component: CourseDetail,
     },
 ]
 

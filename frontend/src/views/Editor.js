@@ -148,76 +148,92 @@ int main() {
     }
 
     return (
-        <div>
+        <div className="m-4">
             <div>
                 <h1>Code Editor</h1>
                 <div className="alert alert-primary" role="alert">
-                    A simple primary alert—check it out!
+                    With our online code editor, you can try your codes without
+                    submitting!
                 </div>
-                <div>
-                    <label className="block mb-2 mr-2 text-md font-bold text-gray-700 text-left">
-                        Select Language:
-                    </label>
-                    <select
-                        value={languageID}
-                        onChange={(e) => setLanguageID(e.target.value)}
-                        className="w-full px-3 py-2 mb-3 text-base leading-medium text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline bg-white"
-                        id="university"
-                    >
-                        <option value="53">C++</option>
-                        <option value="62">Java</option>
-                        <option value="70">Python</option>
-                    </select>
-                </div>
-                <div>
-                    <label className="block mb-2 mr-2 text-md font-bold text-gray-700 text-left">
-                        Select Theme:
-                    </label>
-                    <select
-                        value={theme}
-                        onChange={(e) => setTheme(e.target.value)}
-                        className="w-full px-3 py-2 mb-3 text-base leading-medium text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline bg-white"
-                        id="university"
-                    >
-                        <option value="monokai">Monokai</option>
-                        <option value="chrome">Chrome</option>
-                        <option value="dracula">Dracula</option>
-                    </select>
-                </div>
-                <form onSubmit={(e) => onSubmitCode(e)}>
-                    <div className="d-flex justify-content-center">
-                        <AceEditor
-                            value={code}
-                            mode={langMode}
-                            theme={theme}
-                            onChange={onChangeCode}
-                            name="UNIQUE_ID_OF_DIV"
-                            editorProps={{ $blockScrolling: true }}
-                            setOptions={{
-                                enableBasicAutocompletion: true,
-                                enableLiveAutocompletion: true,
-                                enableSnippets: true,
-                            }}
-                        />
-                    </div>
-                    <button type="submit">Click</button>
-                    <div className="mt-2 ml-5">
-                        <span className="badge badge-primary heading my-2 ">
-                            <i className="fas fa-user fa-fw fa-md"></i> User
-                            Input
-                        </span>
-                        <br />
-                        <textarea id="input" onChange={userInput}></textarea>
-                    </div>
 
-                    <div className="mt-2 ml-5">
-                        <span className="badge badge-primary heading my-2 ">
-                            <i className="fas fa-user fa-fw fa-md"></i> Output
-                        </span>
-                        <br />
-                        <textarea id="output"></textarea>
+                <div className="w-100">
+                    <div className="d-flex flex-row justify-content-around my-4">
+                        <div>
+                            <label className="block mb-2 mr-2 text-md font-bold text-gray-700 text-left">
+                                Select Language:
+                            </label>
+                            <select
+                                value={languageID}
+                                onChange={(e) => setLanguageID(e.target.value)}
+                                className="w-full px-3 py-2 mb-3 text-base leading-medium text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline bg-white"
+                                id="university"
+                            >
+                                <option value="53">C++</option>
+                                <option value="62">Java</option>
+                                <option value="70">Python</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block mb-2 mr-2 text-md font-bold text-gray-700 text-left">
+                                Select Theme:
+                            </label>
+                            <select
+                                value={theme}
+                                onChange={(e) => setTheme(e.target.value)}
+                                className="w-full px-3 py-2 mb-3 text-base leading-medium text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline bg-white"
+                                id="university"
+                            >
+                                <option value="monokai">Monokai</option>
+                                <option value="chrome">Chrome</option>
+                                <option value="dracula">Dracula</option>
+                            </select>
+                        </div>
                     </div>
-                </form>
+                    <form onSubmit={(e) => onSubmitCode(e)}>
+                        <div className="d-flex justify-content-center">
+                            <AceEditor
+                                value={code}
+                                mode={langMode}
+                                theme={theme}
+                                onChange={onChangeCode}
+                                name="UNIQUE_ID_OF_DIV"
+                                editorProps={{ $blockScrolling: true }}
+                                setOptions={{
+                                    enableBasicAutocompletion: true,
+                                    enableLiveAutocompletion: true,
+                                    enableSnippets: true,
+                                }}
+                            />
+                        </div>
+                        <div className="d-flex flex-row justify-content-around">
+                            <div className="mt-2 ml-5">
+                                <span className="badge badge-primary heading my-2 ">
+                                    <i className="fas fa-user fa-fw fa-md"></i>{" "}
+                                    User Input
+                                </span>
+                                <br />
+                                <textarea
+                                    id="input"
+                                    onChange={userInput}
+                                ></textarea>
+                            </div>
+
+                            <div className="mt-2 ml-5">
+                                <span className="badge badge-primary heading my-2 ">
+                                    <i className="fas fa-user fa-fw fa-md"></i>{" "}
+                                    Output
+                                </span>
+                                <br />
+                                <textarea id="output"></textarea>
+                            </div>
+                        </div>
+                        <div className="d-flex justify-content-center">
+                            <button className="px-5 py-2" type="submit">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     )

@@ -12,9 +12,9 @@ export default function () {
             to: "/courses",
         },
         {
-            title: "Assignments",
+            title: "Editor",
             htmlBefore: '<i class="material-icons">error</i>',
-            to: "/assignments",
+            to: "/editor",
         },
         {
             title: "Logout",
