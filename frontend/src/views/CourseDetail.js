@@ -43,7 +43,6 @@ const CourseDetail = ({ history, match }) => {
                     )
                     setLecture(data)
                     setAssignments(data.assignments)
-
                     setAddedStudents(data.students)
                 }
             })
@@ -212,8 +211,8 @@ const CourseDetail = ({ history, match }) => {
                     <div className="my-4">
                         <h5>Create Assignment</h5>
                         <form className="d-flex flex-column">
-                            <input
-                                className="my-2"
+                            <textarea
+                                class="form-control rounded-0"
                                 id="fullname"
                                 placeholder="Name of the assignment"
                                 type="text"
@@ -223,7 +222,11 @@ const CourseDetail = ({ history, match }) => {
                                 autoComplete="off"
                             />
                             <textarea
-                                className="my-2"
+                                style={{
+                                    Height: "100%",
+                                    overflowY: "auto",
+                                }}
+                                class="form-control rounded-0"
                                 id="detail"
                                 placeholder="Detail of the assignment"
                                 type="textarea"
@@ -235,7 +238,7 @@ const CourseDetail = ({ history, match }) => {
                             <div className="my-2 d-flex flex-row justify-content-around">
                                 <div>
                                     <textarea
-                                        className="my-2"
+                                        class="form-control rounded-0"
                                         id="input"
                                         placeholder="Input for a testcase"
                                         type="textarea"
@@ -248,7 +251,7 @@ const CourseDetail = ({ history, match }) => {
                                 </div>
                                 <div>
                                     <textarea
-                                        className="my-2"
+                                        class="form-control rounded-0"
                                         id="output"
                                         placeholder="Output for a testcase"
                                         type="textarea"
@@ -261,10 +264,9 @@ const CourseDetail = ({ history, match }) => {
                                 </div>
                                 <div>
                                     <input
-                                        className="my-2"
+                                        className="form-control rounded-0"
                                         id="score"
                                         placeholder="Score for a testcase"
-                                        type="number"
                                         value={score}
                                         onChange={(e) =>
                                             setScore(e.target.value)
@@ -285,9 +287,15 @@ const CourseDetail = ({ history, match }) => {
                                 {testcases.map((testcase, index) => {
                                     return (
                                         <div className="d-flex flex-row mx-4 my-2 p-2 justify-content-around border border-primary">
-                                            <div>Input: {testcase.in}</div>
-                                            <div>Output: {testcase.out}</div>
-                                            <div>Score: {testcase.sc}</div>
+                                            <div className="text-left">
+                                                Input: {testcase.in}
+                                            </div>
+                                            <div className="text-left">
+                                                Output: {testcase.out}
+                                            </div>
+                                            <div className="text-left">
+                                                Score: {testcase.sc}
+                                            </div>
                                             <button
                                                 onClick={() =>
                                                     deleteTestcase(index)
@@ -310,7 +318,15 @@ const CourseDetail = ({ history, match }) => {
 
                     <div>
                         <h5>Students: {addedStudets.length}</h5>
-                        <table class="table">
+
+                        <table
+                            class="table"
+                            style={{
+                                marginLeft: 20,
+                                maxHeight: "1px",
+                                overflowY: "auto",
+                            }}
+                        >
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>

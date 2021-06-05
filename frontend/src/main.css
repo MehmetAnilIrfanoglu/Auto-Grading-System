@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url("https://fonts.googleapis.com/css?family=Raleway");
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Raleway', sans-serif;
-    color: #F2F2F2;
+    font-family: "Raleway", sans-serif;
+    color: #f2f2f2;
     background-image: url(abdalah.jpg);
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 #container-login {
-    background-color: #1D1F20;
+    background-color: #1d1f20;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -24,11 +24,10 @@ body {
     text-align: center;
     padding: 10px;
     opacity: 0.96;
-    
 }
 
 #container-register {
-    background-color: #1D1F20;
+    background-color: #1d1f20;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -42,12 +41,12 @@ body {
     text-align: center;
     padding: 10px;
     opacity: 0.96;
-    display:block;
+    display: block;
 }
 
 #title {
     position: relative;
-    background-color: #1A1C1D;
+    background-color: #1a1c1d;
     width: 100%;
     padding: 15px 0px;
     border-radius: 0.35em;
@@ -56,8 +55,8 @@ body {
 }
 
 .lock {
-	position: relative;
-	top: 2px;
+    position: relative;
+    top: 2px;
 }
 
 .input {
@@ -77,11 +76,11 @@ body {
     border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-input[type=checkbox] {
+input[type="checkbox"] {
     cursor: pointer;
 }
 
-input[type=text] {
+input[type="text"] {
     color: #949494;
     margin: 0;
     background-color: #373b3d;
@@ -90,17 +89,11 @@ input[type=text] {
     border-radius: 3px;
 }
 
-input[type=text]:focus {
+input[type="text"]:focus {
     border: 1px solid #373b3d;
 }
 
-
-
-
-
-
-
-input[type=number] {
+input[type="number"] {
     color: #949494;
     margin: 0;
     background-color: #373b3d;
@@ -109,12 +102,10 @@ input[type=number] {
     border-radius: 3px;
 }
 
-input[type=number]:focus {
+input[type="number"]:focus {
     border: 1px solid #373b3d;
 }
-
-
-input[type=password] {
+input[type="password"] {
     color: #949494;
     margin: 0;
     background-color: #373b3d;
@@ -123,11 +114,11 @@ input[type=password] {
     border-radius: 3px;
 }
 
-input[type=password]:focus {
+input[type="password"]:focus {
     border: 1px solid #373b3d;
 }
 
-input[type=email] {
+input[type="email"] {
     color: #949494;
     margin: 0;
     background-color: #373b3d;
@@ -136,7 +127,7 @@ input[type=email] {
     border-radius: 3px;
 }
 
-input[type=email]:focus {
+input[type="email"]:focus {
     border: 1px solid #373b3d;
 }
 
@@ -146,17 +137,17 @@ input[type=email]:focus {
 }
 
 .forgot-password a:link {
-    color: #C1C3C6;
+    color: #c1c3c6;
     text-decoration: none;
 }
 
 .forgot-password a:visited {
-    color: #C1C3C6;
+    color: #c1c3c6;
     text-decoration: none;
 }
 
 .forgot-password a:hover {
-    color: #FFF;
+    color: #fff;
     transition: color 1s;
 }
 
@@ -178,7 +169,7 @@ input[type=email]:focus {
 }
 
 .privacy a:hover {
-    color: #C1C3C6;
+    color: #c1c3c6;
     transition: color 1s;
 }
 
@@ -190,10 +181,10 @@ input[type=email]:focus {
     margin: 10px 0;
 }
 
-input[type=submit] {
+input[type="submit"] {
     padding: 6px 25px;
-    background: #373E4A;
-    color: #C1C3C6;
+    background: #373e4a;
+    color: #c1c3c6;
     font-weight: bold;
     border: 0 none;
     cursor: pointer;
@@ -206,7 +197,7 @@ input[type=submit] {
     text-align: center;
     margin-top: 40px;
     width: 85%;
-    border-top: 1px solid #C1C3C6;
+    border-top: 1px solid #c1c3c6;
 }
 
 .clearfix {
@@ -216,10 +207,38 @@ input[type=submit] {
 #register-link {
     margin-top: 10px;
     padding: 6px 25px;
-    background: #373E4A;
-    color: #C1C3C6;
+    background: #373e4a;
+    color: #c1c3c6;
     font-weight: bold;
     border: 0 none;
     cursor: pointer;
     border-radius: 3px;
+}
+button {
+    margin: 1em;
+    border: none;
+    padding: 0.25em 3em 0.25em 1em;
+    text-align: left;
+    background: linear-gradient(
+                -120deg,
+                transparent 1em,
+                #0099c3 1.05em,
+                #0099c3 1.5em,
+                transparent 1.45em,
+                transparent 2em,
+                #0099c3 2.05em
+            )
+            top no-repeat,
+        linear-gradient(
+                300deg,
+                transparent 1em,
+                #0099c3 1.05em,
+                #0099c3 1.5em,
+                transparent 1.45em,
+                transparent 2em,
+                #0099c3 2.05em
+            )
+            bottom no-repeat;
+    background-size: 100% 50%;
+    color: white;
 }
