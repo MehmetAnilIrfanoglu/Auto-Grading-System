@@ -20,6 +20,7 @@ router = APIRouter()
     operation_id="createLecture",
     response_model=Message,
     responses={
+        409: {"model": Message},
         404: {"model": Message},
         403: {"model": Message},
         401: {"model": Message},
@@ -37,6 +38,13 @@ async def create_lecture(
     lecture = jsonable_encoder(lecture)
 
     if auth_user["_id"] == uid and auth_user["user_group"] == "instructor":
+        for lec in auth_user["lectures"]:
+            if lec["name"] == lecture["name"]:
+                return JSONResponse(
+                    status_code=status.HTTP_409_CONFLICT,
+                    content={"message": "Lecture already exists"},
+                )
+
         update_result = await request.app.mongodb["users"].update_one(
             {"_id": uid}, {"$push": {"lectures": lecture}}
         )
@@ -59,7 +67,7 @@ async def create_lecture(
 
 @router.get(
     "/{uid}/lectures",
-    response_description="List all lectures",
+    response_description="List all lectures of user",
     operation_id="listLectures",
     response_model=List[LectureModel],
     responses={
@@ -74,18 +82,18 @@ async def list_lectures(
     auth_user: UserModel = Depends(user_models.get_current_user),
 ):
     """list all lectures"""
-    if auth_user["_id"] == uid:
+    if auth_user["_id"] == uid and auth_user["user_group"] == "instructor":
+        return auth_user["lectures"]
+    else:
         lectures = []
         for doc in await request.app.mongodb["users"].find().to_list(length=100):
             if doc["user_group"] == "instructor":
                 for lecture in doc["lectures"]:
-                    lectures.append(lecture)
+                    for student in lecture["students"]:
+                        if student["number"] == auth_user["number"]:
+                            lectures.append(lecture)
 
         return lectures
-
-    return JSONResponse(
-        status_code=status.HTTP_403_FORBIDDEN, content={"message": "No right to access"}
-    )
 
 
 @router.get(

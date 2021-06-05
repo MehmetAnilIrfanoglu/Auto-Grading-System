@@ -9,7 +9,7 @@ from fastapi import (
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from passlib.hash import bcrypt
-
+from typing import List
 
 from apps.task import user_models
 from .user_models import (
@@ -63,32 +63,21 @@ async def get_current(auth_user: UserModel = Depends(user_models.get_current_use
 
 
 @router.get(
-    "/{uid}",
-    response_description="Get a single user",
-    operation_id="getSingleUser",
-    response_model=UserModel,
+    "/students",
+    response_description="Get student list",
+    operation_id="getStudentList",
+    response_model=List[UserModel],
     responses={403: {"model": Message}, 401: {"model": Message}},
 )
-async def show_user(
-    uid: str,
+async def show_student_list(
     request: Request,
-    auth_user: UserModel = Depends(user_models.get_current_user),
 ):
     """Get a single user with given userID"""
-
-    if auth_user["_id"] == uid:
-        if (
-            user := await request.app.mongodb["users"].find_one(
-                {
-                    "_id": uid,
-                }
-            )
-        ) is not None:
-            return auth_user
-
-    return JSONResponse(
-        status_code=status.HTTP_403_FORBIDDEN, content={"message": "No right to access"}
-    )
+    students = []
+    for doc in await request.app.mongodb["users"].find().to_list(length=100):
+        if doc["user_group"] == "student":
+            students.append(doc)
+    return students
 
 
 @router.put(
