@@ -148,7 +148,7 @@ int main() {
     }
 
     return (
-        <div className="m-4">
+        <div className="m-4 bg-light text-dark">
             <div>
                 <h1>Code Editor</h1>
                 <div className="alert alert-primary" role="alert">
@@ -157,8 +157,8 @@ int main() {
                 </div>
 
                 <div className="w-100">
-                    <div className="d-flex flex-row justify-content-around my-4">
-                        <div>
+                    <div className="row justify-content-md-center">
+                        <div class="col-md-3 mb-4 mt-3">
                             <label className="block mb-2 mr-2 text-md font-bold text-gray-700 text-left">
                                 Select Language:
                             </label>
@@ -173,7 +173,7 @@ int main() {
                                 <option value="70">Python</option>
                             </select>
                         </div>
-                        <div>
+                        <div class="col-md-3 mb-4 mt-3">
                             <label className="block mb-2 mr-2 text-md font-bold text-gray-700 text-left">
                                 Select Theme:
                             </label>
@@ -206,10 +206,10 @@ int main() {
                             />
                         </div>
                         <div className="d-flex flex-row justify-content-around">
-                            <div className="mt-2 ml-5">
-                                <span className="badge badge-primary heading my-2 ">
-                                    <i className="fas fa-user fa-fw fa-md"></i>{" "}
-                                    User Input
+                            <div className="mt-1 mb-5 ml-5">
+                                <span className="my-2 ">
+                                    <i className="fas fa-fw fa-md"></i> User
+                                    Input
                                 </span>
                                 <br />
                                 <textarea
@@ -217,20 +217,27 @@ int main() {
                                     onChange={userInput}
                                 ></textarea>
                             </div>
-
+                        </div>
+                        <div className="d-flex justify-content-center mb-2 mt-3">
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                type="submit"
+                            >
+                                Run Code
+                            </button>
+                        </div>
+                        <div
+                            className="d-flex flex-row justify-content-around"
+                            role="group"
+                        >
                             <div className="mt-2 ml-5">
-                                <span className="badge badge-primary heading my-2 ">
-                                    <i className="fas fa-user fa-fw fa-md"></i>{" "}
-                                    Output
+                                <span className="my-2 ">
+                                    <i className="fas fa-fw fa-md"></i> Output
                                 </span>
                                 <br />
                                 <textarea id="output"></textarea>
                             </div>
-                        </div>
-                        <div className="d-flex justify-content-center">
-                            <button className="px-5 py-2" type="submit">
-                                Submit
-                            </button>
                         </div>
                     </form>
                 </div>
