@@ -115,23 +115,25 @@ const Courses = ({ history }) => {
 
     return (
         <div>
-            <h3>Lectures</h3>
+            <h3>Courses</h3>
             {login.userGroup === "instructor" && (
-                <div>
+                <div className="m-4 ">
                     <form onSubmit={createLecture.bind(this)}>
                         <input
+                            className="form-control rounded-0"
                             id="fullname"
-                            placeholder="Name of the lecture"
-                            type="text"
+                            placeholder="Name of the Course"
                             required
                             onChange={(e) => setName(e.target.value)}
                             autoComplete="off"
                         />
-                        <input
-                            className="d-flex justify-center"
-                            type="submit"
-                            value="Create"
-                        />
+                        <div class="container my-3 bg-light">
+                            <div class="col-md-12 text-center">
+                                <button class="btn btn-primary">
+                                    Create Course
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             )}
