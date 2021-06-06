@@ -199,15 +199,18 @@ int main() {
     return (
         <div className="m-4">
             <div>
-                <h1>Assignment Detail</h1>
+                <h1>Assignment Detail: {assignment.name}</h1>
                 <div className="alert alert-primary" role="alert">
                     Check your code before submission!
                 </div>
                 <div className="d-flex flex-row">
                     <div className="w-50">
-                        <h5>Assignment Detail</h5>
-                        <div className="d-flex flex-row mx-4 my-2 p-2 border border-primary">
-                            Assignment Explanation: {assignment.text}
+                        <center><h3>{assignment.name}</h3></center>
+                        <div className="d-flex flex-row mx-4 my-2 p-2">
+                            Assignment Explanation:
+                        </div>
+                        <div className="d-flex flex-row mx-4 my-2 p-2 h-50 border border-primary">
+                            {assignment.text}
                         </div>
                         <div className="d-flex flex-row mx-4 my-2 p-2 border border-primary">
                             Sample Input: {sampleInput}

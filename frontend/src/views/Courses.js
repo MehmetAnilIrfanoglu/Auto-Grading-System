@@ -114,7 +114,7 @@ const Courses = ({ history }) => {
     }
 
     return (
-        <div>
+        <div className="m-4 ">
             <h3>Courses</h3>
             {login.userGroup === "instructor" && (
                 <div className="m-4 ">
