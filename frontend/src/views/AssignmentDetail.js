@@ -31,6 +31,11 @@ const CodeEditor = ({ history, match }) => {
     const [assignment, setAssignment] = useState({})
     const [sampleInput, setSampleInput] = useState("")
     const [sampleOutput, setSampleOutput] = useState("")
+    const [inputs, setInputs] = useState([])
+    const [outputs, setOutputs] = useState([])
+    const [scores, setScores] = useState([])
+    const [currentOutput, setCurrentOutput] = useState("")
+    const [studentScores, setStudentScores] = useState([])
 
     let defaultClient = AutoGradingApi.ApiClient.instance
     let OAuth2PasswordBearer =
@@ -64,6 +69,9 @@ const CodeEditor = ({ history, match }) => {
                                     setSampleOutput(
                                         data.assignments[i].outputs[0]
                                     )
+                                    setInputs(data.assignments[i].inputs)
+                                    setOutputs(data.assignments[i].outputs)
+                                    setScores(data.assignments[i].scores)
                                 }
                             }
                         }
@@ -139,6 +147,7 @@ int main() {
                 console.log(decode(response.data.stdout))
                 if (response.data.status.id === 3) {
                     outputText.innerHTML = decode(response.data.stdout)
+                    setCurrentOutput(decode(response.data.stdout))
                 } else {
                     //outputText.innerHTML = decode(response.data.compile_output);
                     outputText.innerHTML = response.data.status.description
@@ -185,6 +194,84 @@ int main() {
 
     const onSubmitCode = (e) => {
         e.preventDefault()
+
+        console.log(code)
+        outputText.innerHTML = "Creating Submission ..."
+
+        const studentScoreArray = []
+
+        for (let i = 0; i < inputs.length; i++) {
+            const options = {
+                method: "POST",
+                url: "https://judge0-ce.p.rapidapi.com/submissions",
+                params: { base64_encoded: "true", fields: "*" },
+                headers: {
+                    "content-type": "application/json",
+                    "x-rapidapi-key":
+                        "1e5a3ecf2cmsh767cd93b741e96bp1075c4jsn45925b00f995",
+                    "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+                },
+                data: {
+                    source_code: encode(code),
+                    language_id: Number(languageID),
+                    stdin: encode(inputs[i]),
+                },
+            }
+
+            axios
+                .request(options)
+                .then(function (response) {
+                    let output
+                    outputText.innerHTML = "Checking Submission ..."
+                    const options = {
+                        method: "GET",
+                        url: `https://judge0-ce.p.rapidapi.com/submissions/${response.data.token}`,
+                        params: { base64_encoded: "true", fields: "*" },
+                        headers: {
+                            "x-rapidapi-key":
+                                "1e5a3ecf2cmsh767cd93b741e96bp1075c4jsn45925b00f995",
+                            "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+                        },
+                    }
+
+                    axios
+                        .request(options)
+                        .then(function (response) {
+                            console.log(response.data)
+
+                            console.log(decode(response.data.stdout))
+                            if (response.data.status.id === 3) {
+                                outputText.innerHTML = decode(
+                                    response.data.stdout
+                                )
+                                output = decode(response.data.stdout)
+                                if (outputs[i] === output) {
+                                    console.log("if")
+                                    studentScoreArray.push(scores[i])
+                                } else {
+                                    console.log("else")
+                                    studentScoreArray.push(0)
+                                }
+                                if (i == inputs.length - 1) {
+                                    console.log(studentScoreArray)
+                                }
+                            } else {
+                                //outputText.innerHTML = decode(response.data.compile_output);
+                                outputText.innerHTML =
+                                    response.data.status.description
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error(error)
+                        })
+                })
+                .catch(function (error) {
+                    console.error(error)
+                    outputText.innerHTML = "Submission Failed ..."
+                })
+        }
+
+        setStudentScores(studentScoreArray)
     }
 
     const userInput = (event) => {
@@ -205,7 +292,9 @@ int main() {
                 </div>
                 <div className="d-flex flex-row">
                     <div className="w-50">
-                        <center><h3>{assignment.name}</h3></center>
+                        <center>
+                            <h3>{assignment.name}</h3>
+                        </center>
                         <div className="d-flex flex-row mx-4 my-2 p-2">
                             Assignment Explanation:
                         </div>
