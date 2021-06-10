@@ -171,13 +171,13 @@ async def update_assignment(
         if len(assignment) >= 1:
             update_result = await request.app.mongodb["users"].update_many(
                 {
-                    "_id": uid,
                     "lectures._id": lid,
                     "lectures.assignments._id": aid,
                 },
                 {
                     "$set": {
                         "lectures.$[i].assignments.$[j].name": assignment["name"],
+                        "lectures.$[i].assignments.$[j].text": assignment["text"],
                         "lectures.$[i].assignments.$[j].inputs": assignment["inputs"],
                         "lectures.$[i].assignments.$[j].outputs": assignment["outputs"],
                         "lectures.$[i].assignments.$[j].scores": assignment["scores"],

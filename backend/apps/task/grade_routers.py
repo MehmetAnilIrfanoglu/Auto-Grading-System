@@ -16,7 +16,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/{uid}/lectures/{lid}/students/{sid}",
+    "/lectures/{lid}/students/{sid}/grades",
     response_description="Add new grade into a student",
     operation_id="createGrade",
     response_model=Message,
@@ -28,7 +28,6 @@ router = APIRouter()
     },
 )
 async def create_grade(
-    uid: str,
     lid: str,
     sid: str,
     request: Request,
@@ -39,15 +38,15 @@ async def create_grade(
 
     grade = jsonable_encoder(grade)
 
-    if auth_user["_id"] == uid:
+    if auth_user:
         update_result = await request.app.mongodb["users"].update_one(
-            {"_id": uid, "lectures._id": lid, "lectures.students._id": sid},
+            {"lectures._id": lid, "lectures.students.number": sid},
             {
                 "$push": {
                     "lectures.$[i].students.$[j].grades": grade,
                 }
             },
-            array_filters=[{"i._id": lid}, {"j._id": sid}],
+            array_filters=[{"i._id": lid}, {"j.number": sid}],
         )
 
         if update_result.modified_count == 1:
@@ -67,7 +66,7 @@ async def create_grade(
 
 
 @router.get(
-    "/{uid}/lectures/{lid}/students/{sid}/grades",
+    "/lectures/{lid}/students/{sid}/grades",
     response_description="List all grades of a student",
     operation_id="listGradesOfStudent",
     response_model=List[StudentGradeModel],
@@ -78,7 +77,6 @@ async def create_grade(
     },
 )
 async def list_grades(
-    uid: str,
     lid: str,
     sid: str,
     request: Request,
@@ -86,16 +84,14 @@ async def list_grades(
 ):
     """List all gradess of a student with given userID, lectureID"""
 
-    if auth_user["_id"] == uid:
+    if auth_user:
         if (
-            user := await request.app.mongodb["users"].find_one(
-                {"_id": uid, "lectures._id": lid, "lectures.students._id": sid}
-            )
+            user := await request.app.mongodb["users"].find_one({"lectures._id": lid})
         ) is not None:
             for lecture in user["lectures"]:
                 if lecture["_id"] == lid:
                     for student in lecture["students"]:
-                        if student["_id"] == sid:
+                        if student["number"] == sid:
                             return student["grades"]
 
         return JSONResponse(
@@ -109,7 +105,7 @@ async def list_grades(
 
 
 @router.get(
-    "/{uid}/lectures/{lid}/students/{sid}/grades/{aid}",
+    "/lectures/{lid}/students/{sid}/grades/{aid}",
     response_description="Get a single grade of a student",
     operation_id="getSingleGrade",
     response_model=StudentGradeModel,
@@ -120,7 +116,6 @@ async def list_grades(
     },
 )
 async def show_grade(
-    uid: str,
     lid: str,
     aid: str,
     sid: str,
@@ -129,20 +124,19 @@ async def show_grade(
 ):
     """Get a single assignment with given userID, lectureID and assignmentID"""
 
-    if auth_user["_id"] == uid:
+    if auth_user:
         if (
             user := await request.app.mongodb["users"].find_one(
                 {
-                    "_id": uid,
                     "lectures._id": lid,
-                    "lectures.students._id": sid,
+                    "lectures.students.number": sid,
                 }
             )
         ) is not None:
             for lecture in user["lectures"]:
                 if lecture["_id"] == lid:
                     for student in lecture["students"]:
-                        if student["_id"] == sid:
+                        if student["number"] == sid:
                             for grade in student["grades"]:
                                 if grade["assignment_id"] == aid:
                                     return grade
@@ -158,7 +152,7 @@ async def show_grade(
 
 
 @router.put(
-    "/{uid}/lectures/{lid}/students/{sid}/grades/{gid}",
+    "/lectures/{lid}/students/{sid}/grades/{gid}",
     response_description="Update a grade",
     operation_id="updateGrade",
     response_model=Message,
@@ -169,7 +163,6 @@ async def show_grade(
     },
 )
 async def update_grade(
-    uid: str,
     lid: str,
     sid: str,
     gid: str,
@@ -182,13 +175,12 @@ async def update_grade(
     grade = {k: v for k, v in grade.dict().items() if v is not None}
     grade = jsonable_encoder(grade)
 
-    if auth_user["_id"] == uid:
+    if auth_user:
         if len(grade) >= 1:
             update_result = await request.app.mongodb["users"].update_many(
                 {
-                    "_id": uid,
                     "lectures._id": lid,
-                    "lectures.students._id": sid,
+                    "lectures.students.number": sid,
                     "lectures.students.grades._id": gid,
                 },
                 {
@@ -229,7 +221,7 @@ async def update_grade(
 
 
 @router.delete(
-    "/{uid}/lectures/{lid}/students/{sid}/grades/{gid}",
+    "/lectures/{lid}/students/{sid}/grades/{gid}",
     response_description="Delete grade",
     operation_id="deleteGrade",
     response_model=Message,
@@ -240,7 +232,6 @@ async def update_grade(
     },
 )
 async def delete_grade(
-    uid: str,
     lid: str,
     sid: str,
     gid: str,
@@ -249,10 +240,9 @@ async def delete_grade(
 ):
     """Delete an student with given userID, lectureID and studentID"""
 
-    if auth_user["_id"] == uid:
+    if auth_user:
         update_result = await request.app.mongodb["users"].update_one(
             {
-                "_id": uid,
                 "lectures._id": lid,
                 "lectures.students._id": sid,
                 "lectures.students.grades._id": gid,
