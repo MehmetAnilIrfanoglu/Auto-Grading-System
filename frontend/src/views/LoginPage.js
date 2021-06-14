@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react"
 import { UserContext } from "../Context"
+import "../main.css"
 
 var AutoGradingApi = require("auto_grading_api")
 
@@ -64,7 +65,7 @@ const LoginPage = ({ history }) => {
         <div>
             <style
                 dangerouslySetInnerHTML={{
-                    __html: "\n            body {\n                background-color: #303641;\n                               }\n        ",
+                    __html: "\n            body {\n             background-image: url('https://emrearolat.com/wp-content/uploads/2019/06/AGU-10.jpg');  \n   background-size: cover;  \n  width: 1200px; \n height:600px; \n background-position: center center; \n background-repeat: no-repeat; \n margin:auto; \n padding:0; \n  background-color: #303641;\n                               }\n        ",
                 }}
             />
             <div id="container-login">
