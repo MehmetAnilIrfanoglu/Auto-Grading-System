@@ -58,6 +58,7 @@ const CourseDetail = ({ history, match }) => {
                         "API called successfully. Returned data: " + data
                     )
                     setStudents(data)
+                    setSearchStudents(data)
                 }
             })
         } else {
