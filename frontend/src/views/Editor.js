@@ -12,6 +12,7 @@ import "ace-builds/src-noconflict/theme-dracula"
 import "ace-builds/src-noconflict/theme-chrome"
 
 import "ace-builds/src-noconflict/ext-language_tools"
+import Beautify from "ace-builds/src-noconflict/ext-beautify"
 
 const CodeEditor = ({ history }) => {
     const [code, setCode] = useState("")
@@ -195,6 +196,7 @@ int main() {
                                 value={code}
                                 mode={langMode}
                                 theme={theme}
+                                commands={Beautify.commands}
                                 onChange={onChangeCode}
                                 name="UNIQUE_ID_OF_DIV"
                                 editorProps={{ $blockScrolling: true }}

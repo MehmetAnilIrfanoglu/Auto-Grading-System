@@ -12,6 +12,7 @@ import "ace-builds/src-noconflict/theme-dracula"
 import "ace-builds/src-noconflict/theme-chrome"
 
 import "ace-builds/src-noconflict/ext-language_tools"
+import Beautify from "ace-builds/src-noconflict/ext-beautify"
 
 const AutoGradingApi = require("auto_grading_api")
 
@@ -551,6 +552,7 @@ int main() {
                                                 <AceEditor
                                                     value={code}
                                                     mode={langMode}
+                                                    commands={Beautify.commands}
                                                     theme={theme}
                                                     onChange={onChangeCode}
                                                     name="UNIQUE_ID_OF_DIV"
