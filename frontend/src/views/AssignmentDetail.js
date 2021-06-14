@@ -1,5 +1,6 @@
 import AceEditor from "react-ace"
 import axios from "axios"
+import * as XLSX from "xlsx"
 import React, { useState, useEffect, useContext } from "react"
 import { UserContext } from "../Context"
 
@@ -27,7 +28,7 @@ const CodeEditor = ({ history, match }) => {
     const [theme, setTheme] = useState("chrome")
     const outputText = document.getElementById("output")
 
-    const [login, setLogin] = useContext(UserContext)
+    const [login] = useContext(UserContext)
     const [refresh, setRefresh] = useState(0)
     const [isSubmitted, setIsSubmitted] = useState(false)
 
@@ -72,7 +73,7 @@ const CodeEditor = ({ history, match }) => {
                                     data
                             )
                             for (let i = 0; i < data.assignments.length; i++) {
-                                if (data.assignments[i]._id == assignmentID) {
+                                if (data.assignments[i]._id === assignmentID) {
                                     setAssignment(data.assignments[i])
                                     setSampleInput(
                                         data.assignments[i].inputs[0]
@@ -186,7 +187,7 @@ const CodeEditor = ({ history, match }) => {
         } else {
             history.push("/")
         }
-    }, [login, refresh, isSubmitted])
+    }, [login, refresh, isSubmitted, assignmentID, history, lessonID])
 
     useEffect(() => {
         if ("monokai" === theme) {
@@ -467,11 +468,50 @@ int main() {
         setCode(newCode)
     }
 
+    const readExcel = (file) => {
+        const promise = new Promise((resolve, reject) => {
+            const fileReader = new FileReader()
+            fileReader.readAsArrayBuffer(file)
+
+            fileReader.onload = (e) => {
+                const bufferArray = e.target.result
+
+                const wb = XLSX.read(bufferArray, { type: "buffer" })
+
+                const wsname = wb.SheetNames[0]
+
+                const ws = wb.Sheets[wsname]
+
+                const data = XLSX.utils.sheet_to_json(ws)
+
+                resolve(data)
+            }
+
+            fileReader.onerror = (error) => {
+                reject(error)
+            }
+        })
+
+        const importedCases = []
+
+        promise.then((d) => {
+            for (let i = 0; i < d.length; i++) {
+                const newTestcase = {
+                    in: d[i].Input,
+                    out: d[i].Output,
+                    sc: d[i].Score,
+                }
+                importedCases.push(newTestcase)
+            }
+            setTestcases([...testcases, ...importedCases])
+        })
+    }
+
     return (
         <div className="m-4">
             <div>
                 <h1>Assignment Detail: {assignment.name}</h1>
-                {login.userGroup == "student" ? (
+                {login.userGroup === "student" ? (
                     <div>
                         <div className="alert alert-primary" role="alert">
                             Check your code before submission!
@@ -689,7 +729,16 @@ int main() {
                 ) : (
                     <div className="d-flex flex-row mx-4">
                         <div className="my-4 w-50">
-                            <h5>Update Assignment</h5>
+                            <div className="d-flex flex-row justify-content-between">
+                                <h5>Update Assignment</h5>
+                                <input
+                                    type="file"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0]
+                                        readExcel(file)
+                                    }}
+                                ></input>
+                            </div>
                             <form className="d-flex flex-column">
                                 <textarea
                                     class="form-control rounded-0"

@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from "react"
 import { Link } from "react-router-dom"
+import * as XLSX from "xlsx"
 import { UserContext } from "../Context"
 
 var AutoGradingApi = require("auto_grading_api")
@@ -7,7 +8,7 @@ var AutoGradingApi = require("auto_grading_api")
 const CourseDetail = ({ history, match }) => {
     const lessonID = match.params.id
 
-    const [login, setLogin] = useContext(UserContext)
+    const [login] = useContext(UserContext)
 
     const [refresh, setRefresh] = useState(0)
 
@@ -61,7 +62,7 @@ const CourseDetail = ({ history, match }) => {
         } else {
             history.push("/")
         }
-    }, [login, lessonID, refresh])
+    }, [login, lessonID, refresh, history])
 
     const addStudents = () => {
         for (let i = 0; i < selectedStudents.length; i++) {
@@ -203,13 +204,61 @@ const CourseDetail = ({ history, match }) => {
         }
     }
 
+    const readExcel = (file) => {
+        const promise = new Promise((resolve, reject) => {
+            const fileReader = new FileReader()
+            fileReader.readAsArrayBuffer(file)
+
+            fileReader.onload = (e) => {
+                const bufferArray = e.target.result
+
+                const wb = XLSX.read(bufferArray, { type: "buffer" })
+
+                const wsname = wb.SheetNames[0]
+
+                const ws = wb.Sheets[wsname]
+
+                const data = XLSX.utils.sheet_to_json(ws)
+
+                resolve(data)
+            }
+
+            fileReader.onerror = (error) => {
+                reject(error)
+            }
+        })
+
+        const importedCases = []
+
+        promise.then((d) => {
+            for (let i = 0; i < d.length; i++) {
+                const newTestcase = {
+                    in: d[i].Input,
+                    out: d[i].Output,
+                    sc: d[i].Score,
+                }
+                importedCases.push(newTestcase)
+            }
+            setTestcases([...testcases, ...importedCases])
+        })
+    }
+
     return (
         <div className="m-4">
             <h3>Lecture: {lecture.name}</h3>
             {login.userGroup === "instructor" && (
-                <div>
-                    <div className="my-4">
-                        <h5>Create Assignment</h5>
+                <div className="d-flex flex-row m-4">
+                    <div className="w-50">
+                        <div className="d-flex flex-row justify-content-between">
+                            <h5>Create Assignment</h5>
+                            <input
+                                type="file"
+                                onChange={(e) => {
+                                    const file = e.target.files[0]
+                                    readExcel(file)
+                                }}
+                            ></input>
+                        </div>
                         <form className="d-flex flex-column">
                             <textarea
                                 class="form-control rounded-0"
@@ -286,7 +335,10 @@ const CourseDetail = ({ history, match }) => {
                                 <h5>{testcases.length > 0 && "Testcases"}</h5>
                                 {testcases.map((testcase, index) => {
                                     return (
-                                        <div className="d-flex flex-row mx-4 my-2 p-2 justify-content-around border border-primary">
+                                        <div
+                                            key={index}
+                                            className="d-flex flex-row mx-4 my-2 p-2 justify-content-around border border-primary"
+                                        >
                                             <div className="text-left">
                                                 Input: {testcase.in}
                                             </div>
@@ -316,69 +368,73 @@ const CourseDetail = ({ history, match }) => {
                         </form>
                     </div>
 
-                    <div>
-                        <h5>Students: {addedStudets.length}</h5>
+                    <div className="w-50 mx-4">
+                        <div>
+                            <h5>Students: {addedStudets.length}</h5>
 
-                        <table
-                            class="table"
-                            style={{
-                                marginLeft: 20,
-                                maxHeight: "1px",
-                                overflowY: "auto",
-                            }}
-                        >
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Number</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {students.map((student, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <th scope="row">{index + 1}</th>
-                                            <td>{student.name}</td>
-                                            <td>{student.number}</td>
-                                            <td>
-                                                <input
-                                                    className="mx-4"
-                                                    onChange={() =>
-                                                        selectStudents(student)
-                                                    }
-                                                    checked={selectedStudents.find(
-                                                        (o) =>
-                                                            o.number ===
-                                                            student.number
-                                                    )}
-                                                    disabled={addedStudets.find(
-                                                        (o) =>
-                                                            o.number ===
-                                                            student.number
-                                                    )}
-                                                    type="checkbox"
-                                                ></input>
-                                                <i
-                                                    onClick={() =>
-                                                        deleteStudent(
-                                                            student.number
-                                                        )
-                                                    }
-                                                    className="fas fa-times"
-                                                ></i>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
+                            <table
+                                class="table"
+                                style={{
+                                    marginLeft: 20,
+                                    maxHeight: "1px",
+                                    overflowY: "auto",
+                                }}
+                            >
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Number</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {students.map((student, index) => {
+                                        return (
+                                            <tr key={index}>
+                                                <th scope="row">{index + 1}</th>
+                                                <td>{student.name}</td>
+                                                <td>{student.number}</td>
+                                                <td>
+                                                    <input
+                                                        className="mx-4"
+                                                        onChange={() =>
+                                                            selectStudents(
+                                                                student
+                                                            )
+                                                        }
+                                                        checked={selectedStudents.find(
+                                                            (o) =>
+                                                                o.number ===
+                                                                student.number
+                                                        )}
+                                                        disabled={addedStudets.find(
+                                                            (o) =>
+                                                                o.number ===
+                                                                student.number
+                                                        )}
+                                                        type="checkbox"
+                                                    ></input>
+                                                    <i
+                                                        onClick={() =>
+                                                            deleteStudent(
+                                                                student.number
+                                                            )
+                                                        }
+                                                        className="fas fa-times"
+                                                    ></i>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <button onClick={() => addStudents()}>
+                            Add Selected Students
+                        </button>
                     </div>
-
-                    <button onClick={() => addStudents()}>
-                        Add Selected Students
-                    </button>
                 </div>
             )}
             <div className="my-4">
@@ -397,14 +453,14 @@ const CourseDetail = ({ history, match }) => {
                                 Details
                             </Link>
                             {login.userGroup === "instructor" && (
-                                <a
+                                <button
                                     onClick={() =>
                                         deleteAssignment(assignment._id)
                                     }
                                     className="btn btn-danger"
                                 >
                                     Delete
-                                </a>
+                                </button>
                             )}
                         </div>
                     )
