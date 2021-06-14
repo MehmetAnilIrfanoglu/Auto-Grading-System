@@ -24,6 +24,7 @@ const CourseDetail = ({ history, match }) => {
     const [input, setInput] = useState("")
     const [output, setOutput] = useState("")
     const [score, setScore] = useState("")
+    const [searchStudents, setSearchStudents] = useState([])
 
     let defaultClient = AutoGradingApi.ApiClient.instance
     let OAuth2PasswordBearer =
@@ -243,6 +244,22 @@ const CourseDetail = ({ history, match }) => {
         })
     }
 
+    const onSearchStudent = (key) => {
+        if (key !== "") {
+            setSearchStudents(
+                students.filter(
+                    (student) =>
+                        student.name
+                            .toUpperCase()
+                            .includes(key.toUpperCase()) ||
+                        student.number.toUpperCase().includes(key.toUpperCase())
+                )
+            )
+        } else {
+            setSearchStudents(students)
+        }
+    }
+
     return (
         <div className="m-4">
             <h3>Lecture: {lecture.name}</h3>
@@ -371,6 +388,14 @@ const CourseDetail = ({ history, match }) => {
                     <div className="w-50 mx-4">
                         <div>
                             <h5>Students: {addedStudets.length}</h5>
+                            <input
+                                className="w-11/12 px-3 py-2 my-1 text-sm leading-medium text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                type="text"
+                                placeholder="Search (w/ Student Name, Student Number)"
+                                onChange={(e) =>
+                                    onSearchStudent(e.target.value)
+                                }
+                            />
 
                             <table
                                 class="table"
@@ -389,7 +414,7 @@ const CourseDetail = ({ history, match }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {students.map((student, index) => {
+                                    {searchStudents.map((student, index) => {
                                         return (
                                             <tr key={index}>
                                                 <th scope="row">{index + 1}</th>
