@@ -390,8 +390,8 @@ const CourseDetail = ({ history, match }) => {
                         <div>
                             <h5>Students: {addedStudets.length}</h5>
                             <input
-                                className="w-11/12 px-3 py-2 my-1 text-sm leading-medium text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                                type="text"
+                                className="form-control rounded-0 focus:shadow-outline"
+                                type="textarea"
                                 placeholder="Search (w/ Student Name, Student Number)"
                                 onChange={(e) =>
                                     onSearchStudent(e.target.value)
@@ -479,14 +479,14 @@ const CourseDetail = ({ history, match }) => {
                                 Details
                             </Link>
                             {login.userGroup === "instructor" && (
-                                <button
+                                <a
                                     onClick={() =>
                                         deleteAssignment(assignment._id)
                                     }
                                     className="btn btn-danger"
                                 >
                                     Delete
-                                </button>
+                                </a>
                             )}
                         </div>
                     )
