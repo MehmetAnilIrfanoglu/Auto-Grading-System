@@ -84,6 +84,8 @@ const CodeEditor = ({ history, match }) => {
                                     setOutputs(data.assignments[i].outputs)
                                     setScores(data.assignments[i].scores)
                                     const tests = []
+                                    let totGrade = 0
+
                                     for (
                                         let j = 0;
                                         j < data.assignments[i].inputs.length;
@@ -95,7 +97,11 @@ const CodeEditor = ({ history, match }) => {
                                             sc: data.assignments[i].scores[j],
                                         }
                                         tests.push(newTestcase)
+
+                                        totGrade +=
+                                            data.assignments[i].scores[j]
                                     }
+                                    setTotalGrade(totGrade)
                                     setTestcases(tests)
                                     setName(data.assignments[i].name)
                                     setDetail(data.assignments[i].text)
@@ -146,11 +152,6 @@ const CodeEditor = ({ history, match }) => {
                                 }
                             }
                             setStudentScores(stuScr)
-                            let totGrade = 0
-                            for (let i = 0; i < scores.length; i++) {
-                                totGrade += scores[i]
-                            }
-                            setTotalGrade(totGrade)
                         }
                     }
                 )
