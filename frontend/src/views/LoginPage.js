@@ -52,6 +52,7 @@ const LoginPage = ({ history }) => {
                                 userNumber: data.number,
                                 userID: data._id,
                                 userGroup: data.user_group,
+                                userEmail: data.email,
                             })
                             history.push("/dashboard")
                         }
