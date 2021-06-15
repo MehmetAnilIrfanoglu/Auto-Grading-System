@@ -154,7 +154,13 @@ const CourseDetail = ({ history, match }) => {
                     const tickStudent = students.find(
                         (o) => o.number === String(d[i].Number)
                     )
-                    importedStudents.push(tickStudent)
+                    if (
+                        !selectedStudents.find(
+                            (o) => o.number === String(d[i].Number)
+                        )
+                    ) {
+                        importedStudents.push(tickStudent)
+                    }
                 }
 
                 setSelectedStudents([...selectedStudents, ...importedStudents])
