@@ -25,6 +25,7 @@ const CourseDetail = ({ history, match }) => {
     const [output, setOutput] = useState("")
     const [score, setScore] = useState("")
     const [searchStudents, setSearchStudents] = useState([])
+    const [studentNumbers, setStudentNumbers] = useState([])
 
     let defaultClient = AutoGradingApi.ApiClient.instance
     let OAuth2PasswordBearer =
@@ -87,6 +88,7 @@ const CourseDetail = ({ history, match }) => {
                             "API called successfully. Returned data: " + data
                         )
                         setRefresh(refresh + 1)
+                        setSelectedStudents([])
                     }
                 }
             )
@@ -116,6 +118,47 @@ const CourseDetail = ({ history, match }) => {
                     }
                 }
             )
+        }
+    }
+
+    const readStudentExcel = (file) => {
+        if (file) {
+            const promise = new Promise((resolve, reject) => {
+                const fileReader = new FileReader()
+                fileReader.readAsArrayBuffer(file)
+
+                fileReader.onload = (e) => {
+                    const bufferArray = e.target.result
+
+                    const wb = XLSX.read(bufferArray, { type: "buffer" })
+
+                    const wsname = wb.SheetNames[0]
+
+                    const ws = wb.Sheets[wsname]
+
+                    const data = XLSX.utils.sheet_to_json(ws)
+
+                    resolve(data)
+                    console.log(data)
+                }
+
+                fileReader.onerror = (error) => {
+                    reject(error)
+                }
+            })
+
+            const importedStudents = []
+
+            promise.then((d) => {
+                for (let i = 0; i < d.length; i++) {
+                    const tickStudent = students.find(
+                        (o) => o.number === String(d[i].Number)
+                    )
+                    importedStudents.push(tickStudent)
+                }
+
+                setSelectedStudents([...selectedStudents, ...importedStudents])
+            })
         }
     }
 
@@ -207,42 +250,44 @@ const CourseDetail = ({ history, match }) => {
     }
 
     const readExcel = (file) => {
-        const promise = new Promise((resolve, reject) => {
-            const fileReader = new FileReader()
-            fileReader.readAsArrayBuffer(file)
+        if (file) {
+            const promise = new Promise((resolve, reject) => {
+                const fileReader = new FileReader()
+                fileReader.readAsArrayBuffer(file)
 
-            fileReader.onload = (e) => {
-                const bufferArray = e.target.result
+                fileReader.onload = (e) => {
+                    const bufferArray = e.target.result
 
-                const wb = XLSX.read(bufferArray, { type: "buffer" })
+                    const wb = XLSX.read(bufferArray, { type: "buffer" })
 
-                const wsname = wb.SheetNames[0]
+                    const wsname = wb.SheetNames[0]
 
-                const ws = wb.Sheets[wsname]
+                    const ws = wb.Sheets[wsname]
 
-                const data = XLSX.utils.sheet_to_json(ws)
+                    const data = XLSX.utils.sheet_to_json(ws)
 
-                resolve(data)
-            }
-
-            fileReader.onerror = (error) => {
-                reject(error)
-            }
-        })
-
-        const importedCases = []
-
-        promise.then((d) => {
-            for (let i = 0; i < d.length; i++) {
-                const newTestcase = {
-                    in: d[i].Input,
-                    out: d[i].Output,
-                    sc: d[i].Score,
+                    resolve(data)
                 }
-                importedCases.push(newTestcase)
-            }
-            setTestcases([...testcases, ...importedCases])
-        })
+
+                fileReader.onerror = (error) => {
+                    reject(error)
+                }
+            })
+
+            const importedCases = []
+
+            promise.then((d) => {
+                for (let i = 0; i < d.length; i++) {
+                    const newTestcase = {
+                        in: d[i].Input,
+                        out: d[i].Output,
+                        sc: d[i].Score,
+                    }
+                    importedCases.push(newTestcase)
+                }
+                setTestcases([...testcases, ...importedCases])
+            })
+        }
     }
 
     const onSearchStudent = (key) => {
@@ -388,7 +433,17 @@ const CourseDetail = ({ history, match }) => {
 
                     <div className="w-50 mx-4">
                         <div>
-                            <h5>Students: {addedStudets.length}</h5>
+                            <div className="d-flex flex-row justify-content-between">
+                                <h5>Students: {addedStudets.length}</h5>
+                                <input
+                                    type="file"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0]
+                                        readStudentExcel(file)
+                                    }}
+                                ></input>
+                            </div>
+
                             <input
                                 className="form-control rounded-0 focus:shadow-outline"
                                 type="textarea"

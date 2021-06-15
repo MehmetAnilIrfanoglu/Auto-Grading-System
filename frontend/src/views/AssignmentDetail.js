@@ -49,6 +49,7 @@ const CodeEditor = ({ history, match }) => {
     const [formInput, setFormInput] = useState("")
     const [output, setOutput] = useState("")
     const [score, setScore] = useState("")
+    const [searchStudents, setSearchStudents] = useState([])
 
     let defaultClient = AutoGradingApi.ApiClient.instance
     let OAuth2PasswordBearer =
@@ -154,6 +155,7 @@ const CodeEditor = ({ history, match }) => {
                                 }
                             }
                             setStudentScores(stuScr)
+                            setSearchStudents(stuScr)
                         }
                     }
                 )
@@ -417,6 +419,22 @@ int main() {
         setTestcases(testcases.filter((testcase, index) => index !== curIndex))
     }
 
+    const onSearchStudent = (key) => {
+        if (key !== "") {
+            setSearchStudents(
+                studentScores.filter(
+                    (student) =>
+                        student.name
+                            .toUpperCase()
+                            .includes(key.toUpperCase()) ||
+                        student.number.toUpperCase().includes(key.toUpperCase())
+                )
+            )
+        } else {
+            setSearchStudents(studentScores)
+        }
+    }
+
     const updateAssignment = (e) => {
         e.preventDefault()
 
@@ -469,42 +487,44 @@ int main() {
     }
 
     const readExcel = (file) => {
-        const promise = new Promise((resolve, reject) => {
-            const fileReader = new FileReader()
-            fileReader.readAsArrayBuffer(file)
+        if (file) {
+            const promise = new Promise((resolve, reject) => {
+                const fileReader = new FileReader()
+                fileReader.readAsArrayBuffer(file)
 
-            fileReader.onload = (e) => {
-                const bufferArray = e.target.result
+                fileReader.onload = (e) => {
+                    const bufferArray = e.target.result
 
-                const wb = XLSX.read(bufferArray, { type: "buffer" })
+                    const wb = XLSX.read(bufferArray, { type: "buffer" })
 
-                const wsname = wb.SheetNames[0]
+                    const wsname = wb.SheetNames[0]
 
-                const ws = wb.Sheets[wsname]
+                    const ws = wb.Sheets[wsname]
 
-                const data = XLSX.utils.sheet_to_json(ws)
+                    const data = XLSX.utils.sheet_to_json(ws)
 
-                resolve(data)
-            }
-
-            fileReader.onerror = (error) => {
-                reject(error)
-            }
-        })
-
-        const importedCases = []
-
-        promise.then((d) => {
-            for (let i = 0; i < d.length; i++) {
-                const newTestcase = {
-                    in: d[i].Input,
-                    out: d[i].Output,
-                    sc: d[i].Score,
+                    resolve(data)
                 }
-                importedCases.push(newTestcase)
-            }
-            setTestcases([...testcases, ...importedCases])
-        })
+
+                fileReader.onerror = (error) => {
+                    reject(error)
+                }
+            })
+
+            const importedCases = []
+
+            promise.then((d) => {
+                for (let i = 0; i < d.length; i++) {
+                    const newTestcase = {
+                        in: d[i].Input,
+                        out: d[i].Output,
+                        sc: d[i].Score,
+                    }
+                    importedCases.push(newTestcase)
+                }
+                setTestcases([...testcases, ...importedCases])
+            })
+        }
     }
 
     return (
@@ -851,7 +871,14 @@ int main() {
                             <h5 className="d-flex justify-content-center">
                                 Students: {studentScores.length}
                             </h5>
-
+                            <input
+                                className="form-control rounded-0 focus:shadow-outline"
+                                type="textarea"
+                                placeholder="Search (w/ Student Name, Student Number)"
+                                onChange={(e) =>
+                                    onSearchStudent(e.target.value)
+                                }
+                            />
                             <table
                                 class="table"
                                 style={{
@@ -869,7 +896,7 @@ int main() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {studentScores.map(
+                                    {searchStudents.map(
                                         (studentGrade, index) => {
                                             return (
                                                 <tr key={index}>
