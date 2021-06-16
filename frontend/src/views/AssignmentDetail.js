@@ -708,14 +708,20 @@ int main() {
                                                                         {index}
                                                                     </th>
                                                                     <td>
-                                                                        {input}
+                                                                        {index ==
+                                                                        0
+                                                                            ? input
+                                                                            : "Testcase " +
+                                                                              (index +
+                                                                                  1)}
                                                                     </td>
                                                                     <td>
-                                                                        {
-                                                                            outputs[
-                                                                                index
-                                                                            ]
-                                                                        }
+                                                                        {index ==
+                                                                        0
+                                                                            ? outputs[0]
+                                                                            : "Output " +
+                                                                              (index +
+                                                                                  1)}
                                                                     </td>
                                                                     <td>
                                                                         {
