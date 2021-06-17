@@ -15,6 +15,8 @@ In today's conditions, where software knowledge is important, the need for tools
 
 ## Project Documnetation
 In order to see the working principles of the project, the project must be run first. After the project is run, you can access the necessary documentation data by using the website links listed below.
+Go to `http://localhost:8000/docs`
+Go to `http://localhost:8000/redoc`
 
 ## Screenshots of Project
 The images you see below are shared in order to get a general idea about the interface of the application.
